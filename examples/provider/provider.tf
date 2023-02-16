@@ -18,13 +18,13 @@ resource "crosswire_policy" "resource_name" {
   entitlements = [
     {
       provider = "CROSSWIRE"
-      subject = "APPROVE"
-      object = "PROPOSAL"
+      subject  = "APPROVE"
+      object   = "PROPOSAL"
     },
     {
       provider = "CROSSWIRE"
-      subject = "CREATE"
-      object = "POLICY"
+      subject  = "CREATE"
+      object   = "POLICY"
     }
   ]
   condition = {
@@ -32,28 +32,28 @@ resource "crosswire_policy" "resource_name" {
     entitlements = [
       {
         provider = "CROSSWIRE"
-        subject = "ROLE"
-        object = "ADMIN"
+        subject  = "ROLE"
+        object   = "ADMIN"
       }
     ]
     subconditions = [
       {
-        quantifier: "ALL"
-        entitlements: [
+        quantifier : "ALL"
+        entitlements : [
           {
-            provider: "CROSSWIRE"
-            subject: "READ"
-            object: "PROPOSAL"
+            provider : "CROSSWIRE"
+            subject : "READ"
+            object : "PROPOSAL"
           },
           {
-            provider: "CROSSWIRE"
-            subject: "CREATE"
-            object: "PROPOSAL"
+            provider : "CROSSWIRE"
+            subject : "CREATE"
+            object : "PROPOSAL"
           },
           {
-            provider: "CROSSWIRE"
-            subject: "APPROVE"
-            object: "PROPOSAL"
+            provider : "CROSSWIRE"
+            subject : "APPROVE"
+            object : "PROPOSAL"
           }
         ]
       }
@@ -67,8 +67,8 @@ resource "crosswire_policy" "resource_name" {
   entitlement_approvers = [
     {
       provider = "CROSSWIRE"
-      subject = "APPROVE"
-      object = "PROPOSAL"
+      subject  = "APPROVE"
+      object   = "PROPOSAL"
     }
   ]
   approval_behavior = "ANY"
