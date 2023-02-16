@@ -26,8 +26,8 @@ type CrosswireProvider struct {
 
 // ScaffoldingProviderModel describes the provider data model.
 type CrosswireProviderModel struct {
-	Host   types.String `tfsdk:"host"`
-	ApiKey types.String `tfsdk:"api_key"`
+	Host     types.String `tfsdk:"host"`
+	ApiToken types.String `tfsdk:"api_token"`
 }
 
 func (p *CrosswireProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -41,8 +41,8 @@ func (p *CrosswireProvider) Schema(ctx context.Context, req provider.SchemaReque
 			"host": schema.StringAttribute{
 				Optional: true,
 			},
-			"api_key": schema.StringAttribute{
-				MarkdownDescription: "API key for your Crosswire organization",
+			"api_token": schema.StringAttribute{
+				MarkdownDescription: "API token for your Crosswire organization",
 				Optional:            true,
 				Sensitive:           true,
 			},
@@ -59,12 +59,12 @@ func (p *CrosswireProvider) Configure(ctx context.Context, req provider.Configur
 		return
 	}
 
-	if config.ApiKey.IsUnknown() {
+	if config.ApiToken.IsUnknown() {
 		resp.Diagnostics.AddAttributeError(
-			path.Root("api_key"),
+			path.Root("api_token"),
 			"Unknown Crosswire API Key",
-			"The provider cannot create the Crosswire API client as there is an unknown configuration value for the Crosswire API key. "+
-				"Either target apply the source of the value first, set the value statically in the configuration, or use the CROSSWIRE_API_KEY environment variable.")
+			"The provider cannot create the Crosswire API client as there is an unknown configuration value for the Crosswire API token. "+
+				"Either target apply the source of the value first, set the value statically in the configuration, or use the CROSSWIRE_API_TOKEN environment variable.")
 	}
 
 	if config.Host.IsUnknown() {
@@ -81,26 +81,26 @@ func (p *CrosswireProvider) Configure(ctx context.Context, req provider.Configur
 
 	host := os.Getenv("CROSSWIRE_API_HOST")
 
-	apiKey := os.Getenv("CROSSWIRE_API_KEY")
+	apiToken := os.Getenv("CROSSWIRE_API_TOKEN")
 
 	if !config.Host.IsNull() {
 		host = config.Host.ValueString()
 	}
 
-	if !config.ApiKey.IsNull() {
-		apiKey = config.ApiKey.ValueString()
+	if !config.ApiToken.IsNull() {
+		apiToken = config.ApiToken.ValueString()
 	}
 
 	if host == "" {
 		host = HostURL
 	}
 
-	if apiKey == "" {
+	if apiToken == "" {
 		resp.Diagnostics.AddAttributeError(
-			path.Root("api_key"),
-			"Missing Crosswire API Secret Key",
-			"The provider cannot create the Crosswire API client as there is a missing or empty value for the Crosswire API key. "+
-				"Set the password value in the configuration or use the CROSSWIRE_API_KEY environment variable. "+
+			path.Root("api_token"),
+			"Missing Crosswire API Secret Token",
+			"The provider cannot create the Crosswire API client as there is a missing or empty value for the Crosswire API token. "+
+				"Set the token value in the configuration or use the CROSSWIRE_API_TOKEN environment variable. "+
 				"If one is already set, ensure the value is not empty.",
 		)
 	}
@@ -110,10 +110,10 @@ func (p *CrosswireProvider) Configure(ctx context.Context, req provider.Configur
 	}
 
 	ctx = tflog.SetField(ctx, "crosswire_host", host)
-	ctx = tflog.SetField(ctx, "crosswire_api_key", apiKey)
-	ctx = tflog.MaskFieldValuesWithFieldKeys(ctx, "crosswire_api_key")
+	ctx = tflog.SetField(ctx, "crosswire_api_token", apiToken)
+	ctx = tflog.MaskFieldValuesWithFieldKeys(ctx, "crosswire_api_token")
 
-	client, err := NewClient(&host, &apiKey)
+	client, err := NewClient(&host, &apiToken)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Unable to create Crosswire API Client",
