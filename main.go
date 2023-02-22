@@ -5,8 +5,8 @@ import (
 	"flag"
 	"log"
 
+	"github.com/crosswire/terraform-provider-crosswire/crosswire"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/hashicorp/terraform-provider-scaffolding-framework/internal/provider"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website
@@ -36,11 +36,11 @@ func main() {
 
 	opts := providerserver.ServeOpts{
 		// TODO: Update this string with the published name of your provider.
-		Address: "registry.terraform.io/hashicorp/scaffolding",
+		Address: "registry.terraform.io/crosswire-security/crosswire",
 		Debug:   debug,
 	}
 
-	err := providerserver.Serve(context.Background(), provider.New(version), opts)
+	err := providerserver.Serve(context.Background(), crosswire.New(version), opts)
 
 	if err != nil {
 		log.Fatal(err.Error())
